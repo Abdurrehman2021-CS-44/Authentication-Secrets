@@ -38,6 +38,39 @@ app.get("/register", (req, res)=>{
     res.render("register");
 });
 
+app.post("/register", (req, res)=>{
+    const username = req.body.username;
+    const password = req.body.password;
+
+    const user = new User({
+        username: username,
+        password: password
+    });
+
+    user.save()
+    .then(()=>{
+        res.render("secrets")
+    })
+    .catch((err)=>{
+        console.log(err);
+    });
+});
+
+app.post("/login", (req, res)=>{
+    const username = req.body.username;
+    const password = req.body.password;
+
+    User.findOne({username: username})
+    .then((user)=>{
+        if(user.password === password){
+            res.render("secrets");
+        }
+    })
+    .catch((err)=>{
+        console.log(err);
+    });
+})
+
 app.listen(3000, ()=>{
     console.log("Server is running on port 3000.");
 });
